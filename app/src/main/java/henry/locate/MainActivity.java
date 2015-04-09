@@ -69,11 +69,11 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();*/
-            runSetup();
         }
         else {
-            Intent intent = new Intent(getApplicationContext(), LocationService.class);
-            startService(intent);        }
+            Log.v(TAG,"GPS LAUNCH");
+            Intent i = new Intent(getApplicationContext(), GPSActivity.class);
+            startActivity(i);        }
 
     }
 
@@ -110,8 +110,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
     public void connectAccount(View view) {
         final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-        Intent intent = new Intent(getApplicationContext(), LocationService.class);
-        startService(intent);
+
         final String tmDevice, tmSerial, androidId, deviceModel;
         deviceModel = Build.MODEL;
         tmDevice = "" + tm.getDeviceId();
@@ -132,19 +131,12 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         email = txtEmail.getText().toString();
         password = txtPassword.getText().toString();
         serverURL = txtURL.getText().toString();
-        Location mLastLocation;
-        mGoogleApiClient.connect();
 
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        lat = String.valueOf(mLastLocation.getLatitude());
-        longitude = String.valueOf(mLastLocation.getLongitude());
         Uri.Builder builder = new Uri.Builder()
                 .appendQueryParameter("deviceid", deviceId)
                 .appendQueryParameter("model", deviceModel)
                 .appendQueryParameter("password", password)
-                .appendQueryParameter("lat", lat)
-                .appendQueryParameter("long", longitude)
+
                 .appendQueryParameter("email", email);
         String query = builder.build().getEncodedQuery();
         new RegisterApplication().execute(query);
@@ -228,30 +220,40 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                URL url1 = new URL("http://www.google.com/");
+                URL url1 = new URL("http://192.168.0.15:3000/location");
+                Log.v(TAG,"0");
                 HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
+                Log.v(TAG,"1");
+                Log.v(TAG,params[0]);
+
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
                 conn.setRequestMethod("POST");
-                conn.setDoInput(true);
+            //    conn.setDoInput(true);
                 conn.setDoOutput(true);
-
-                OutputStream os = conn.getOutputStream();
+                OutputStream os = null;
+                os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
+                        new OutputStreamWriter(os));
+                Log.v(TAG,"2");
                 writer.write(params[0]);
+                Log.v(TAG,"3");
+
                 writer.flush();
                 writer.close();
                 os.close();
+                Log.v(TAG,"4");
 
                 conn.connect();
+                Log.v(TAG,"5");
+
                 InputStream stream = null;
                 stream = conn.getInputStream();
                 String content = readIt(stream,500);
                 Log.v(TAG,"content = " + content);
                 return content;
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                return "Unable to retrieve web page. URL may be invalid." + e.getMessage();
             }
         }
 

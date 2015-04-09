@@ -99,7 +99,7 @@ public class LocationService extends Service implements LocationListener, Google
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                URL url1 = new URL("http://127.0.0.1:8000/");
+                URL url1 = new URL("http://192.168.0.15:3000/");
                 HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
@@ -160,8 +160,8 @@ public class LocationService extends Service implements LocationListener, Google
             tmSerial = "" + tm.getSimSerialNumber();
             androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-            String authkey = settings.getString("authkey","DEFAULT");
-            String email = settings.getString("email","DEFAULT");
+            String authkey = settings.getString("authkey","");
+            String email = settings.getString("email","");
 
             UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
             String deviceId = deviceUuid.toString();
