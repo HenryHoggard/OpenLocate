@@ -1,6 +1,8 @@
 package henry.locate;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -49,22 +51,36 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener {
     private static final String TAG = "Locate";
     private GoogleApiClient mGoogleApiClient;
-
+    public static final String PREFS = "Settings" ;
+    public static final String URL = "urlKey";
+    public static final String Phone = "phoneKey";
+    public static final String Email = "emailKey";
+    public static final String Street = "streetKey";
+    public static final String Place = "placeKey";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        SharedPreferences settings = getSharedPreferences(PREFS, 4);
+        String authkey = settings.getString("authkey","");
+        if (authkey == "") {
+         /*   mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();*/
+            runSetup();
+        }
+        else {
+            Intent intent = new Intent(getApplicationContext(), LocationService.class);
+            startService(intent);        }
+
     }
 
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart fired ..............");
-        mGoogleApiClient.connect();
+      //  mGoogleApiClient.connect();
     }
 
 
@@ -90,16 +106,12 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         return super.onOptionsItemSelected(item);
     }
 
-    protected void createLocationRequest() {
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
+
 
     public void connectAccount(View view) {
         final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-
+        Intent intent = new Intent(getApplicationContext(), LocationService.class);
+        startService(intent);
         final String tmDevice, tmSerial, androidId, deviceModel;
         deviceModel = Build.MODEL;
         tmDevice = "" + tm.getDeviceId();
@@ -136,6 +148,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                 .appendQueryParameter("email", email);
         String query = builder.build().getEncodedQuery();
         new RegisterApplication().execute(query);
+
   /*      try {
             url = new URL("http://127.0.0.1/");
         } catch (MalformedURLException e) {
@@ -235,7 +248,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                 InputStream stream = null;
                 stream = conn.getInputStream();
                 String content = readIt(stream,500);
-                Log.v(TAG,content);
+                Log.v(TAG,"content = " + content);
                 return content;
             } catch (IOException e) {
                 return "Unable to retrieve web page. URL may be invalid.";
