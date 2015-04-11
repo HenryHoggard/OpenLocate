@@ -99,7 +99,11 @@ public class LocationService extends Service implements LocationListener, Google
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                URL url1 = new URL("http://192.168.0.15:3000/");
+                SharedPreferences settings = getSharedPreferences("Settings", 4);
+                String authkey = settings.getString("authkey","");
+                String url = settings.getString("url","");
+                url = url + "location";
+                URL url1 = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);

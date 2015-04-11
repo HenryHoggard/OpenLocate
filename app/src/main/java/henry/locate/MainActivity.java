@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.os.Build;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -214,47 +215,82 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 */
     }
 
-    private class RegisterApplication extends AsyncTask<String, Void, String> {
+    private class RegisterApplication extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                URL url1 = new URL("http://192.168.0.15:3000/location");
-                Log.v(TAG,"0");
+                URL url1 = new URL("http://192.168.0.15:3000/device");
+                Log.v(TAG, "0");
                 HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-                Log.v(TAG,"1");
-                Log.v(TAG,params[0]);
+                Log.v(TAG, "1");
+                Log.v(TAG, params[0]);
 
                 conn.setReadTimeout(10000);
                 conn.setConnectTimeout(15000);
                 conn.setRequestMethod("POST");
-            //    conn.setDoInput(true);
+                //    conn.setDoInput(true);
                 conn.setDoOutput(true);
                 OutputStream os = null;
                 os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os));
-                Log.v(TAG,"2");
+                        new OutputStreamWriter(os, "UTF-8"));
+                Log.v(TAG, "2");
                 writer.write(params[0]);
-                Log.v(TAG,"3");
+                Log.v(TAG, "3");
 
                 writer.flush();
                 writer.close();
                 os.close();
-                Log.v(TAG,"4");
+                Log.v(TAG, "4");
 
                 conn.connect();
-                Log.v(TAG,"5");
+                Log.v(TAG, "5");
 
                 InputStream stream = null;
                 stream = conn.getInputStream();
-                String content = readIt(stream,500);
-                Log.v(TAG,"content = " + content);
+                String content = readIt(stream, 500);
+                Log.v(TAG, "content = " + content);
+                if (content.contains("authkey")) {
+                    Log.v(TAG, "Success");
+                    String authkey = content.replace("authkey=","");
+                    SharedPreferences sharedPref = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("authkey", authkey);
+                    editor.putString("email", "email");
+                    editor.putString("url", "http://192.168.0.15:3000/");
+                    editor.commit();
+
+
+                }
+
+
                 return content;
             } catch (IOException e) {
                 return "Unable to retrieve web page. URL may be invalid." + e.getMessage();
             }
+        }
+          protected void onPostExecute(String result) {
+              if (result.contains("authkey")) {
+                  Log.i(TAG,result);
+                  Context context = getApplicationContext();
+                  CharSequence text = "Successfully connected phone!";
+                  int duration = Toast.LENGTH_SHORT;
+
+                  Toast toast = Toast.makeText(context, text, duration);
+                  toast.show();
+                  Intent i = new Intent(getApplicationContext(), GPSActivity.class);
+                  startActivity(i);
+              } else {
+                  Context context = getApplicationContext();
+                  CharSequence text = result;
+                  int duration = Toast.LENGTH_SHORT;
+
+                  Toast toast = Toast.makeText(context, text, duration);
+                  toast.show();
+              }
+          }
         }
 
 
@@ -267,12 +303,12 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             return new String(buffer);
         }
 
-        // onPostExecute displays the results of the AsyncTask.
+     /*   // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
             Log.v(TAG, result);
-        }
-    }
+        }*/
+
 
         @Override
         public void onConnected(Bundle bundle) {
