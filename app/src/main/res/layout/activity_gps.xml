@@ -12,8 +12,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="GPS Running.."
         android:id="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="98dp"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

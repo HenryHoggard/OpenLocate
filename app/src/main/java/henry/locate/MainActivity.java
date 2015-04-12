@@ -29,6 +29,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,7 +141,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
                 .appendQueryParameter("email", email);
         String query = builder.build().getEncodedQuery();
-        new RegisterApplication().execute(query);
+        new RegisterApplication().execute(query,serverURL);
 
   /*      try {
             url = new URL("http://127.0.0.1/");
@@ -221,7 +222,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
             // params comes from the execute() call: params[0] is the url.
             try {
-                URL url1 = new URL("http://192.168.0.15:3000/device");
+                URL url1 = new URL(params[1] + "/device");
                 Log.v(TAG, "0");
                 HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
                 Log.v(TAG, "1");
@@ -250,16 +251,27 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
                 InputStream stream = null;
                 stream = conn.getInputStream();
-                String content = readIt(stream, 500);
-                Log.v(TAG, "content = " + content);
+                String content = "";
+                BufferedReader r = new BufferedReader(new InputStreamReader(stream));
+                StringBuilder total = new StringBuilder();
+                String line;
+                while ((line = r.readLine()) != null) {
+                    total.append(line);
+                }
+                Log.i(TAG, String.valueOf(total));
+                content = String.valueOf(total);
                 if (content.contains("authkey")) {
                     Log.v(TAG, "Success");
-                    String authkey = content.replace("authkey=","");
+                    String authkey = content.split(",")[0];
+                    String email = content.split(",")[1];
+                    authkey = authkey.replace("authkey=","");
+                    email = email.replace("email=","");
                     SharedPreferences sharedPref = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("authkey", authkey);
-                    editor.putString("email", "email");
-                    editor.putString("url", "http://192.168.0.15:3000/");
+                    Log.v(TAG,authkey);
+                    editor.putString("email", email);
+                    editor.putString("url", params[1]);
                     editor.commit();
 
 
@@ -273,6 +285,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         }
           protected void onPostExecute(String result) {
               if (result.contains("authkey")) {
+
                   Log.i(TAG,result);
                   Context context = getApplicationContext();
                   CharSequence text = "Successfully connected phone!";

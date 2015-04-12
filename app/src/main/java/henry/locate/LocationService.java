@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -134,9 +135,16 @@ public class LocationService extends Service implements LocationListener, Google
                 conn.connect();
                 InputStream stream = null;
                 stream = conn.getInputStream();
-                String content = readIt(stream, 500);
-                Log.v(TAG, "content = " + content);
-                return content;
+               // String content = readIt(stream, 500);
+                String content = "";
+                BufferedReader r = new BufferedReader(new InputStreamReader(stream));
+                StringBuilder total = new StringBuilder();
+                String line;
+                while ((line = r.readLine()) != null) {
+                    total.append(line);
+                }
+                Log.i(TAG, String.valueOf(total));
+                return String.valueOf(total);
             } catch (IOException e) {
                 return "Unable to retrieve web page. URL may be invalid." + e.toString();
             }
