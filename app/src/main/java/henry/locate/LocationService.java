@@ -84,8 +84,8 @@ public class LocationService extends Service implements LocationListener, Google
        // mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 //mGoogleApiClient);
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setInterval(180000);
+        mLocationRequest.setFastestInterval(180000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,  this);
      // lat = String.valueOf(mLastLocation.getLatitude());
@@ -103,7 +103,9 @@ public class LocationService extends Service implements LocationListener, Google
                 SharedPreferences settings = getSharedPreferences("Settings", 4);
                 String authkey = settings.getString("authkey","");
                 String url = settings.getString("url","");
-                url = url + "location";
+                String email = settings.getString("email","");
+
+                url = url + "/location";
                 URL url1 = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
                 conn.setReadTimeout(10000);
@@ -182,8 +184,7 @@ public class LocationService extends Service implements LocationListener, Google
                     .appendQueryParameter("deviceid", deviceId)
                     .appendQueryParameter("authkey", authkey)
                     .appendQueryParameter("lat", lat)
-                    .appendQueryParameter("long", longitude)
-                    .appendQueryParameter("time",mLastUpdateTime)
+                    .appendQueryParameter("lng", longitude)
                     .appendQueryParameter("email", email);
             String query = builder.build().getEncodedQuery();
             new SendLocation().execute(query);
