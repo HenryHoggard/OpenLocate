@@ -74,7 +74,7 @@ public class LocationService extends Service implements LocationListener, Google
     public int onStartCommand(Intent intent, int flags, int startId) {
         //TODO do something useful
         Log.i(TAG,"STARTCMD");
-        return Service.START_NOT_STICKY;
+        return Service.START_STICKY;
     }
     @Override
     public void onConnected(Bundle bundle) {
@@ -84,9 +84,9 @@ public class LocationService extends Service implements LocationListener, Google
        // mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 //mGoogleApiClient);
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(180000);
-        mLocationRequest.setFastestInterval(180000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setInterval(5000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,  this);
      // lat = String.valueOf(mLastLocation.getLatitude());
 
