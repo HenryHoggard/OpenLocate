@@ -84,8 +84,8 @@ public class LocationService extends Service implements LocationListener, Google
        // mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 //mGoogleApiClient);
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(5000);
-        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setInterval(300000);
+        mLocationRequest.setFastestInterval(300000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,  this);
      // lat = String.valueOf(mLastLocation.getLatitude());
