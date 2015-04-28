@@ -20,7 +20,7 @@ OpenLocate is still in development and will be buggy. Many features are still in
 
 ### Installation
 
-To install the Android client, download and install the APK or compile it yourself!
+To install the Android client, download and install the latest APK or compile it yourself!
 
 
 ```sh
@@ -28,7 +28,9 @@ $ git clone https://github.com/HenryHoggard/OpenLocate
 $ cd OpenLocate
 $ 
 ```
-
+```sh
+$ adb install openlocate-release.apk
+```
 
 
 ### Development
