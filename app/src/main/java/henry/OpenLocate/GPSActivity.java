@@ -1,4 +1,4 @@
-package henry.locate;
+package henry.OpenLocate;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;

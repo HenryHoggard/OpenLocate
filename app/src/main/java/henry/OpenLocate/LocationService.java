@@ -1,18 +1,15 @@
-package henry.locate;
+package henry.OpenLocate;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.google.android.gms.location.LocationListener;

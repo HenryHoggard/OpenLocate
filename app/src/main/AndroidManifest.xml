@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="henry.locate" >
+    package="henry.OpenLocate" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -10,10 +10,10 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="OpenLocate"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="henry.OpenLocate.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,11 +27,11 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".LocationService"
+            android:name="henry.OpenLocate.LocationService"
             android:exported="false" />
 
         <activity
-            android:name=".GPSActivity"
+            android:name="henry.OpenLocate.GPSActivity"
             android:label="@string/title_activity_gps" >
         </activity>
     </application>
