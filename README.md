@@ -45,6 +45,6 @@ License
 
 GPL-V3
 
-Android Build [![Build Status](https://magnum.travis-ci.com/HenryHoggard/OpenLocate.svg?token=gcgF4x4zUmN7ws9HiZEs&branch=master)](https://magnum.travis-ci.com/HenryHoggard/OpenLocate)
-
+Android Build
+[![Build Status](https://travis-ci.org/HenryHoggard/OpenLocate.svg?branch=master)](https://travis-ci.org/HenryHoggard/OpenLocate)
 

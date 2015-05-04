@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +14,7 @@
         android:label="OpenLocate"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="henry.OpenLocate.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,16 +23,25 @@
             </intent-filter>
         </activity>
 
+        <receiver
+            android:name=".MyBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name="henry.OpenLocate.LocationService"
+            android:name=".LocationService"
             android:exported="false" />
 
         <activity
-            android:name="henry.OpenLocate.GPSActivity"
+            android:name=".GPSActivity"
             android:label="@string/title_activity_gps" >
         </activity>
     </application>
